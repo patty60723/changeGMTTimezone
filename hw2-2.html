@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<title>hw-2</title>
+
+<script>
+/*********************************************************/
+/* 1. 顯示時間: 幾年幾月幾號禮拜幾 幾點幾分幾秒			 */
+/* 2. 每秒刷新一次										 */
+/* 3. 有一個輸入欄和一個按鈕							 */
+/* 4. 可以輸入gmt 然後按按鈕之後時間就跟著gmt的時間		 */
+/*********************************************************/
+
+var d = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+var today;
+var zone = 0;
+
+setInterval(refreshTime, 1000);
+
+function refreshTime()
+{
+	
+	
+	var output;
+
+	today = new Date();
+
+	if (isNaN(zone))
+		document.getElementById("timeStamp").innerHTML = "<p style=\"color:red;\">Error! Please enter integer between -12 ~ +12</p>";
+
+	else if (zone > 12)
+		document.getElementById("timeStamp").innerHTML = "<p style=\"color:red;\">Error! The number is too big. Please enter integer between -12 ~ +12</p>";
+
+	else if (zone < -12)
+		document.getElementById("timeStamp").innerHTML = "<p style=\"color:red;\">Error! The number is too small. Please enter integer between -12 ~ +12</p>";
+
+	else
+	{
+		var UTCtoday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), today.getUTCHours(), today.getMinutes(), today.getUTCSeconds(), today.getUTCMilliseconds());										//turn the UTC time to milliseconds from 1970/1/1
+		UTCtoday += zone*3600000;
+		var zoneTime = new Date(UTCtoday);
+
+		output = zoneTime.getUTCFullYear() + "/";
+		output += (zoneTime.getUTCMonth()+1) + "/";
+		output += zoneTime.getUTCDate() + "　"
+		output += d[zoneTime.getUTCDay()] + "　";
+
+		output += (zoneTime.getUTCHours()<10)? "0" + zoneTime.getUTCHours() + ":" : zoneTime.getUTCHours() + ":";
+		output += (zoneTime.getUTCMinutes()<10)? "0" + zoneTime.getUTCMinutes() + ":" : zoneTime.getUTCMinutes() + ":";
+		output += (zoneTime.getUTCSeconds()<10)? "0" + zoneTime.getUTCSeconds() : zoneTime.getUTCSeconds();
+
+		document.getElementById("timeStamp").innerHTML = "<p style=\"font-size: 200%;\">" + output + "</p>";
+	}
+	//document.getElementById("debug").innerHTML = UTCtoday + ", " + zone;					//debug output
+}
+
+function setZone()
+{
+	zone = document.getElementById("gmt").value;
+	zone = parseInt(zone);
+	freshTime();
+	
+}
+
+</script>
+
+<body onload="refreshTime()" align="center">
+<div id="timeStamp">
+<p>&nbsp</p>
+</div>
+
+<div>
+	<form name="timeZone" method="post">
+		<p>Enter GMT + <span style="color: blue;"> N </span></br><span style="font-size:50%;">-12 < N < 12</span></p>
+		<input type="text" id="gmt"></br></br>
+		<button type="button" onclick="setZone()">Click</button>
+	</form>
+</div>
+<!-debug output->
+<div id="debug"></div>
+</body>
