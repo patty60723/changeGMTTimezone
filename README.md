@@ -1,3 +1,5 @@
+# This program is for practicing JavaScript
+
 # changeGMTTimezone
 Enter a number between 12 and -12 to change time zone and display the GMT time
 
